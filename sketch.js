@@ -7,6 +7,7 @@ function setup() {
   capture = createCapture(VIDEO);
   capture.size(640, 480);
   capture.hide();
+  imageMode(CORNER);
 
   // 初始化 faceMesh
   faceMesh = ml5.faceMesh(capture, { maxFaces: 1, refineLandmarks: false, flipHorizontal: false }, () => console.log("Model Ready!"));
@@ -16,14 +17,8 @@ function setup() {
 function draw() {
   background(220);
 
-  // 計算影像縮放
-  let vW = 0, vH = 0;
-  let vx = width / 2, vy = height / 2;
-
-  if (capture.width > 0 && capture.height > 0) {
-    let videoAspect = capture.width / capture.height;
-    let targetW = width * 0.5;
-    let targetH = height * 0.5;
+  . let targetH = height * 0.5;
+    let vW, vH;
 
     if (videoAspect > targetW / targetH) {
       vW = targetW;
@@ -33,41 +28,19 @@ function draw() {
       vW = vH * videoAspect;
     }
 
-    vx = (width - vW) / 2;
-    vy = (height - vH) / 2;
-  }
+    let vx = (width - vW) / 2;
+    let vy = (height - vH) / 2;
 
-  imageMode(CORNER);
-  if (vW > 0) image(capture, vx, vy, vW, vH);
+ if (faces.length > 0) {
+      let keypoints = faces[0].keypoints;
+      const earIndices = [132,, 0); // 黃色
 
-  // 繪製耳垂裝飾
-  if (faces.length > 0) {
-    let keypoints = faces[0].keypoints;
-    
-    // 132 是右耳垂區域, 361 是左耳垂區域 (MediaPipe 索引)
-    const earIndices = [132, 361];
-    
-    fill(255, 255, 0); // 黃色
-    noStroke();
-
-    earIndices.forEach(idx => {
-      let p = keypoints[idx];
-      if (p) {
-        // 將座標從影像尺寸映射到畫布實際顯示的位置
-        let tx = map(p.x, 0, capture.width, vx, vx + vW);
-        let ty = map(p.y, 0, capture.height, vy, vy + vH);
-        
-        // 繪製三個圓圈形成耳環樣子
-        let gap = 15;  // 圓圈間距
-        let size = 10; // 圓圈大小
-        for (let i = 0; i < 3; i++) {
-          circle(tx, ty + (i * gap), size);
+ 1
+let i = 0; i < 3; i++) {
+            circle(tx, ty + (i * gap), size);
+          }
         }
-      }
-    });
+      });
+    }
   }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
+}oe(
